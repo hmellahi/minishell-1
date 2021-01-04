@@ -1,13 +1,32 @@
 
 #include "minishell.h"
 
+void throw_garbage()
+{
+}
+
 int main(int argc, char **argv, char **env)
 {
-    int i;
+    t_shell shell;
 
-    i = 0;
+    /*
+    **  initialize shell variables
+    ** shell structure : 
+    **      cmds_str : array of string stores the name of functions
+    **      cmds     : func that return a function depend on the [i] arg 
+    **                ( cool right? instead of doing tons of if & else spaghetti code..)
+    */
 
-    while (env[i])
-        printf("[%s]\n", env[i++]);
-    return (0);
+    init_shell(&shell);
+
+    /*
+    **  shell Loop u know...
+    */
+    loop(&shell);
+
+    /*
+    **  free  everything before exiting
+    */
+    throw_garbage();
+    return (FALSE);
 }

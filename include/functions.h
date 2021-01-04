@@ -1,6 +1,6 @@
 
 #ifndef FUNCTIONS_H
-# define FUNCTIONS_H
+#define FUNCTIONS_H
 
 //This header file is only for functions' prototypes
 
@@ -12,5 +12,8 @@
     chdir() stat() lstat() fstat() execve() dup() dup2() pipe()
     opendir() readdir() closedir() strerror() errno()
 */
+void    init_shell(t_shell *shell);
+void    loop(t_shell *shell);
+int     gnl(int fd, char **line);
 
 #endif

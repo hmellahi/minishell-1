@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2021/01/04 17:55:07 by marvin            #+#    #+#              #
+#    Updated: 2021/01/04 17:55:07 by marvin           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 
 .PHONEY: all clean fclean re bonus
 
@@ -17,9 +29,7 @@ SRC		=	src/minishell.c\
 			$(PARSER:%.c=./src/parser/%.c)\
 			$(UTILS:%.c=./src/utils/%.c)
 
-OBJ		=	minishell.o\
-			$(PARSER:.c=.o)\
-			$(UTILS:.c=.o)
+OBJ		=	$(SRC:.c=.o)
 
 COMPILE	= $(CC) -I include -c $(SRC) #$(FLAGS)
 LINK = $(CC) $(OBJ) -o $(NAME)  #$(FLAGS)

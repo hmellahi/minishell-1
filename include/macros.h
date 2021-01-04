@@ -11,7 +11,14 @@
 # define AND                &&
 # define OR                 ||
 # define ELIF               else if
-
+# define FAIL               0
+# define UNCOMPLETED        1
+# define STDIN              0
+# define STDOUT             1
+# define DEBUG_MODE         1
+# define STATUS             1
+# define OUTPUT             0
+# define CMDS_COUNT         7
 # define DIGITS         "0123456789"
 # define ASCII_LOWER    "abcdefghijklmnopqrstuvwxyz"
 # define ASCII_UPPER    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -31,7 +38,7 @@
 # define MALLOC(ptr)        (ptr) = malloc(sizeof(*(ptr) ))
 # define ARRLLOC(p, l)      (p) = malloc(sizeof(*(p) ) * l)
 
-
+typedef char* t_string;
 //define signal codes
 
 
