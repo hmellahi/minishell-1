@@ -10,41 +10,52 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "minishell.h"
 
 /*
 ** shell loop
 ** 
 */
 
-void read_line(int fd, t_string *line)
+int	ft_strcmp(char *s1, const char *s2)
 {
-    gnl(fd, &line);
+	int x;
+
+	x = 0;
+	while (s1[x] == s2[x] && s1[x] != '\0' && s2[x] != '\0')
+		x++;
+	return (s1[x] - s2[x]);
 }
 
 t_string *parse(t_string line)
 {
-    t_string args[1];
+    t_string *args;
 
+    args = malloc(sizeof(t_string) + 1);
     args[0] = line;
+    args[1] = NULL;
     return (args);
 }
 
 t_res shell_launch(t_string *args)
 {
-    pid_t pid, wpid;
+    pid_t pid;
     int status;
+    t_res   res;
 
     pid = fork();
     if (pid == 0)
     {
         // Child process
         if (execvp(args[0], args) == -1)
-            handle_error(INDEFINED_CMD, FAIL);
+            handle_error(UNDEFINED_CMD);
     }
     else if (pid < 0)
         // Error forking
-        handle_error(COULDNT_FORK, FAIL);
+        handle_error(COULDNT_FORK);
+    res.status = 1;
+    res.output = "";
+    return res;
 }
 /*
 **  execute the command given 
@@ -64,26 +75,16 @@ t_res execute(t_string *args, t_shell *shell)
     while (++i < CMDS_COUNT)
         if (ft_strcmp(cmd, shell->cmds_str[i]) == 0)
             return ((*shell->cmds)(i))(args);
+    ft_putstr_fd("ss", 2);
     return (shell_launch(args));
-}
-
-void ft_putstr_fd(char *s, int fd)
-{
-    if (!s)
-        return;
-    while (*s)
-    {
-        ft_putchar_fd(*s, fd);
-        s++;
-    }
 }
 
 void loop(t_shell   *shell)
 {
     int status;
     t_string line;
-    t_string args;
-    t_string *result;
+    t_string *args;
+    t_res result;
 
     status = TRUE;
     ft_putstr_fd("Welcome to wowo shell!\n", 2);
@@ -94,13 +95,12 @@ void loop(t_shell   *shell)
         ** read the input then store it in line
         */
         read_line(STDIN, &line);
-
+        ft_putstr_fd(line, STDOUT);
         /*
         **  Parse the line into args and store it
         */
 
         args = parse(line);
-
         /*
         **  execute the command
         */
@@ -111,11 +111,11 @@ void loop(t_shell   *shell)
         **  Update the status
         ** which indicate when the shell will stop
         */
-        status = result[STATUS];
+        status = result.status;
 
         /*
         **  print the output if the command executed has an output
         */
-        ft_putstr_fd(result[OUTPUT], 2);
+        ft_putstr_fd(result.output, STDOUT);
     }
 }

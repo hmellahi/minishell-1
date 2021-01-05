@@ -15,6 +15,7 @@
 
 #include "macros.h"
 t_string *init_cmds_str();
-t_string *cmds();
+t_res (*cmds(int i))(char **args);
+t_res cmd_exit(t_string *args);
 
 #endif

@@ -22,6 +22,7 @@ int main(int argc, char **argv, char **env)
     /*
     **  shell Loop u know...
     */
+    // ft_putstr_fd(shell.cmds_str[0],2);
     loop(&shell);
 
     /*

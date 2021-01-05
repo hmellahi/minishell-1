@@ -2,6 +2,7 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
+#include "macros.h"
 //This header file is only for functions' prototypes
 
 /* 
@@ -14,6 +15,9 @@
 */
 void    init_shell(t_shell *shell);
 void    loop(t_shell *shell);
-int     gnl(int fd, char **line);
+int     read_line(int fd, char **line);
+void    handle_error(t_string   error);
+void    ft_putchar_fd(int c, int fd);
+void ft_putstr_fd(char *s, int fd);
 
 #endif

@@ -27,9 +27,22 @@ DBG		=	MY_DBG.C my_dbg.h
 
 SRC		=	src/minishell.c\
 			$(PARSER:%.c=./src/parser/%.c)\
-			$(UTILS:%.c=./src/utils/%.c)
+			$(UTILS:%.c=./src/utils/%.c)\
+			src/init.c src/loop.c src/errors.c src/utils/gnl.c\
+			$(CMDS:%.c=./src/cmds/%.c)\
+			src/cmds/init_cmds.c\
+			src/cmds/cmd_exit.c
 
-OBJ		=	$(SRC:.c=.o)
+OBJ		=	minishell.o\
+            $(PARSER:.c=.o)\
+            $(UTILS:.c=.o)\
+			init.o\
+			loop.o\
+			$(CMDS:.c=.o)\
+			errors.o\
+			gnl.o\
+			init_cmds.o \
+			cmd_exit.o
 
 COMPILE	= $(CC) -I include -c $(SRC) #$(FLAGS)
 LINK = $(CC) $(OBJ) -o $(NAME)  #$(FLAGS)

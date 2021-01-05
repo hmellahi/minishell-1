@@ -13,6 +13,6 @@
 # ifndef ERRORS_H
 # define ERRORS_H
 
-# define INDEFINED_CMD "INDEFINED CMD"
+# define UNDEFINED_CMD "UNDEFINED CMD"
 # define COULDNT_FORK "COULDNT FORK"
 # endif

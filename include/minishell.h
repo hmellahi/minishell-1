@@ -3,6 +3,7 @@
 # define MINISHELL_H
 
 # include <stdio.h>
+# include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
 # include "macros.h"
@@ -29,17 +30,5 @@ typedef struct          s_file
 {
     
 }                       t_file;
-
-typedef struct          s_res
-{
-    t_string    output;
-    int         status;
-}                       t_res;
-
-typedef struct          s_shell
-{
-    t_string    cmds_str[CMDS_COUNT];
-    t_res       *cmds;
-}                       t_shell;
 
 #endif

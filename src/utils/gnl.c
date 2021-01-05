@@ -8,64 +8,142 @@ TODO:
 */
 
 #undef BUFF_SIZE
-# define BUFF_SIZE 128
+# define BUFFER_SIZE 128
 
-static int		ft_free(char **fr1, char **fr2)
+
+size_t		ft_strlen(const char *str)
 {
-	if (fr1)
-	{
-		free(*fr1);
-		*fr1 = NULL;
-	}
-	if (fr2)
-	{
-		free(*fr2);
-		*fr2 = NULL;
-	}
-	return (-1);
+	size_t i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
+char		*ft_strchr(const char *s, int c)
+{
+	char	*str;
+
+	str = (char *)s;
+	while (*str != c && *str)
+		str++;
+	if (*str != c)
+		return (0);
+	return (str);
 }
 
-static int		got_line(char **fd_table, char **buff, char **line)
+char		*ft_strdup(const char *str)
 {
-	char		*fr1;
+	int		len;
+	char	*dest;
 
-	ft_free(buff, NULL);
-	if (!(*line = ft_substr(*fd_table, 0, ft_line_len(*fd_table))))
-		return (-1);
-	fr1 = *fd_table;
-	if (!(*fd_table = ft_strdup(*fd_table + ft_line_len(*fd_table) + 1)))
+	len = ft_strlen(str);
+	if (!(dest = (char *)malloc(sizeof(char) * len + 1)))
+		return (NULL);
+	dest[len] = 0;
+	while (len--)
+		dest[len] = ((char*)str)[len];
+	return (dest);
+}
+
+char		*join(char const *s1, char const *s2)
+{
+	int		i;
+	int		k;
+	char	*s12;
+
+	k = 0;
+	i = 0;
+	if (!s1 || !s2)
+		return (NULL);
+	if (!(s12 = malloc(ft_strlen((char *)s1) + ft_strlen((char *)s2) + 1)))
+		return (NULL);
+	while (s1[i])
 	{
-		ft_free(&fr1, NULL);
-		return (-1);
+		s12[i] = s1[i];
+		i++;
 	}
-	ft_free(&fr1, NULL);
+	while (s2[k])
+		s12[i++] = s2[k++];
+	s12[i] = 0;
+	return (s12);
+}
+
+int		is_valid(int fd, char **line)
+{
+	if (BUFFER_SIZE < 0 || !line || read(fd, NULL, 0) < 0)
+		return (0);
 	return (1);
 }
 
-int		gnl(int fd, char **line)
+void	free_space(char **ptr)
 {
-	ssize_t		read_ret;
-	char		*p;
-	char		*buff;
-	static char *fd_table[OPEN_MAX];
+	free(*ptr);
+	*ptr = NULL;
+}
 
-	if (fd < 0 || !line || BUFF_SIZE < 0
-		|| read(fd, NULL, 0) || !(buff = malloc(BUFF_SIZE + 1)))
-		return (-1);
-	if (!fd_table[fd] && !(fd_table[fd] = ft_strdup("")))
-			return (-1);
-	while (!ft_find(fd_table[fd], '\n') && (read_ret = read(fd, buff, BUFF_SIZE)) > 0)
+int		saveline(char **line, char **rem, char **ptr, char **buff)
+{
+	char *tmp;
+
+	**ptr = '\0';
+	*ptr += 1;
+	tmp = *rem;
+	*rem = ft_strdup(*ptr);
+	free_space(&tmp);
+	*line = join(*line, *buff);
+	free_space(buff);
+	return (1);
+}
+
+int		checkremainder(char **remainder, char **line, char **buff)
+{
+	char *ptr;
+	char *tmp;
+
+	ptr = NULL;
+	*line = ft_strdup("");
+	if (*remainder)
 	{
-		buff[read_ret] = '\0';
-		p = fd_table[fd];
-		if (!(fd_table[fd] = ft_strjoin(fd_table[fd], buff)))
-			return (ft_free(&p, NULL));
-		ft_free(&p, NULL);
+		if ((ptr = ft_strchr(*remainder, '\n')))
+		{
+			*ptr = '\0';
+			*line = join(*remainder, *line);
+			tmp = *remainder;
+			*remainder = ft_strdup(ptr + 1);
+			free_space(&tmp);
+			free_space(buff);
+			return (1);
+		}
+		else
+		{
+			*line = join(*remainder, *line);
+			free_space(remainder);
+		}
 	}
-	if (ft_find(fd_table[fd], '\n'))
-		return (got_line(&fd_table[fd], &buff, line));
-	if (!(*line = ft_strdup(fd_table[fd])))
+	return (0);
+}
+
+int		read_line(int fd, char **line)
+{
+	char			*buff;
+	int				nbytes;
+	char			*ptr;
+	static char		*rem;
+
+	free(NULL);
+	if (!is_valid(fd, line) ||
+	!(buff = (char*)malloc(sizeof(char) * BUFFER_SIZE + 1)))
 		return (-1);
-	ft_free(&fd_table[fd], &buff);
-	return (read_ret > 0 ? 1 : read_ret);
+	if (checkremainder(&rem, line, &buff))
+		return (1);
+	while ((nbytes = read(fd, buff, BUFFER_SIZE)))
+	{
+		buff[nbytes] = '\0';
+		if ((ptr = ft_strchr(buff, '\n')))
+			return (saveline(line, &rem, &ptr, &buff));
+		*line = join(*line, buff);
+	}
+	free_space(&buff);
+	return (0);
 }

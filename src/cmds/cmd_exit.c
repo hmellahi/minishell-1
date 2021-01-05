@@ -10,13 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "minishell.h"
 
-t_res cmd_exit()
+t_res cmd_exit(t_string *args)
 {
     t_res res;
 
-    res[STATUS] = FALSE;
-    res[OUTPUT] = "cyaaa";
+    res.status = FALSE;
+    res.output = "cyaaa";
     return (res);
 }

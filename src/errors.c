@@ -10,7 +10,24 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "minishell.h"
+
+
+void    ft_putchar_fd(int c, int fd)
+{
+    write(1, &c, fd);
+}
+
+void ft_putstr_fd(char *s, int fd)
+{
+    if (!s)
+        return;
+    while (*s)
+    {
+        ft_putchar_fd(*s, fd);
+        s++;
+    }
+}
 
 void    handle_error(t_string   error)
 {

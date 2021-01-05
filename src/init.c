@@ -10,11 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "minishell.h"
 
 void    init_shell(t_shell *shell)
 {
-    shell = malloc(sizeof(t_shell));
     shell->cmds_str = init_cmds_str();
     shell->cmds = &cmds;
 }
